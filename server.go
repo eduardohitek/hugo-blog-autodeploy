@@ -12,25 +12,13 @@ import (
 
 //PushWebHook Struct que representa uma chamda do GithubWebhook
 type PushWebHook struct {
-	Action     string `json:"action" bson:"action"`
-	CheckSuite struct {
-		CreatedAt  string `json:"created_at" bson:"created_at"`
-		HeadBranch string `json:"head_branch" bson:"head_branch"`
-		HeadCommit struct {
-			Author struct {
-				Email string `json:"email" bson:"email"`
-				Name  string `json:"name" bson:"name"`
-			} `json:"author" bson:"author"`
-			ID        string `json:"id" bson:"id"`
-			Message   string `json:"message" bson:"message"`
-			Timestamp string `json:"timestamp" bson:"timestamp"`
-			TreeID    string `json:"tree_id" bson:"tree_id"`
-		} `json:"head_commit" bson:"head_commit"`
-		HeadSha              string `json:"head_sha" bson:"head_sha"`
-		ID                   int64  `json:"id" bson:"id"`
-		LatestCheckRunsCount int64  `json:"latest_check_runs_count" bson:"latest_check_runs_count"`
-		NodeID               string `json:"node_id" bson:"node_id"`
-	} `json:"check_suite" bson:"check_suite"`
+	HeadCommit struct {
+		Author struct {
+			Username string `json:"username" bson:"username"`
+		} `json:"author" bson:"author"`
+		Message string `json:"message" bson:"message"`
+	} `json:"head_commit" bson:"head_commit"`
+	Ref string `json:"ref" bson:"ref"`
 }
 
 // AutoDeploy Handler for the Github Webhook
@@ -68,10 +56,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("server failed to star: %v", err)
 	}
-}
-
-// Request bla bla bla
-type Request struct {
-	GithubSecret string `json:"ghsecret"`
-	Teste        int    `json:"teste"`
 }
