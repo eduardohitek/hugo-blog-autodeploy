@@ -12,15 +12,13 @@ import (
 
 //PushWebHook Struct que representa uma chamda do GithubWebhook
 type PushWebHook struct {
-	Payload struct {
-		HeadCommit struct {
-			Author struct {
-				Username string `json:"username" bson:"username"`
-			} `json:"author" bson:"author"`
-			Message string `json:"message" bson:"message"`
-		} `json:"head_commit" bson:"head_commit"`
-		Ref string `json:"ref" bson:"ref"`
-	} `json:"payload" bson:"payload"`
+	HeadCommit struct {
+		Author struct {
+			Username string `json:"username" bson:"username"`
+		} `json:"author" bson:"author"`
+		Message string `json:"message" bson:"message"`
+	} `json:"head_commit" bson:"head_commit"`
+	Ref string `json:"ref" bson:"ref"`
 }
 
 // AutoDeploy Handler for the Github Webhook
