@@ -1,7 +1,10 @@
 package main
 
 import (
+	"crypto/hmac"
+	"crypto/sha1"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -25,15 +28,18 @@ type PushWebHook struct {
 func AutoDeploy(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	signature := r.Header.Get("X-Hub-Signature")
 	if r.Method == "POST" {
 		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 		if err != nil {
 			log.Fatal(err)
 		}
+		a := HashPayload("H3lpM3Str4ng3r", body)
 		request := PushWebHook{}
 		log.Println(string(body))
 		json.Unmarshal(body, &request)
 		log.Println(request)
+		log.Println(a, signature)
 		w.Write([]byte("Gasto adicionado com Sucesso"))
 	}
 }
@@ -56,4 +62,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("server failed to star: %v", err)
 	}
+}
+
+// HashPayload função para gerar o hash de verificação do Github Webhook
+func HashPayload(secret string, playloadBody []byte) string {
+	hm := hmac.New(sha1.New, []byte(secret))
+	hm.Write(playloadBody)
+	sum := hm.Sum(nil)
+	return fmt.Sprintf("%x", sum)
 }
